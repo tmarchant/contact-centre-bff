@@ -1,0 +1,13 @@
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+idea {
+    project {
+        jdkName = '1.8'
+        languageLevel = '1.8'
+        vcs = 'Git'
+    }
+    module {
+        excludeDirs += file('build')
+    }
+}
