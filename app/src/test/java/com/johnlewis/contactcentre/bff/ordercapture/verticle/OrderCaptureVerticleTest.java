@@ -1,11 +1,14 @@
 package com.johnlewis.contactcentre.bff.ordercapture.verticle;
 
+import com.johnlewis.contactcentre.bff.global.domain.ErrorResponse;
 import com.johnlewis.contactcentre.bff.global.domain.RawJsonResponse;
 import com.johnlewis.contactcentre.bff.ordercapture.domain.CreateOrderCaptureResponse;
 import com.johnlewis.contactcentre.bff.ordercapture.verticle.client.StubOrderCaptureApiClient;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
@@ -61,7 +64,9 @@ public class OrderCaptureVerticleTest {
         final Async async = context.async();
 
         CreateOrderCaptureResponse testResponse = new CreateOrderCaptureResponse("an order capture ID", "a session ID");
-        orderCaptureClient.setCreateOrderCaptureResponse(testResponse);
+        RawJsonResponse jsonResponse = new RawJsonResponse(Json.encode(testResponse));
+
+        orderCaptureClient.setCreateOrderCaptureResponse(jsonResponse);
 
         vertx.createHttpClient().post(PORT, "localhost", "/v1/order-capture", response -> {
             assertThat(context, response.statusCode(), is(200));
@@ -98,7 +103,7 @@ public class OrderCaptureVerticleTest {
     }
 
     @Test
-    public void getOrderCaptureReturnsExpectedResponse(TestContext context) {
+    public void getOrderCaptureHandlesSuccessResponse(TestContext context) {
         final Async async = context.async();
 
         String orderCaptureId = "o323";
@@ -112,6 +117,35 @@ public class OrderCaptureVerticleTest {
                 .handler(response -> {
                     response.bodyHandler(body -> {
                         assertThat(context, body.toString(), is(orderCaptureResponse.getData()));
+                        async.complete();
+                    });
+                })
+                .end();
+    }
+
+    @Test
+    public void getOrderCaptureHandlesErrorResponse(TestContext context) {
+        final Async async = context.async();
+
+        String orderCaptureId = "o323";
+        String token = "89ssdsFAK!3jS1";
+
+        ErrorResponse errorResponse = new ErrorResponse("whoops.wrong.basket", "Not yours put it back!");
+        RawJsonResponse orderCaptureResponse = new RawJsonResponse
+                (HttpResponseStatus.UNAUTHORIZED.code(), Json.encode(errorResponse));
+
+        orderCaptureClient.setOrderCaptureResponse(orderCaptureResponse);
+
+        vertx.createHttpClient()
+                .get(PORT, "localhost", "/v1/order-capture/"+orderCaptureId+"?token="+token)
+                .handler(response -> {
+                    assertThat(context, response.statusCode(), is(HttpResponseStatus.UNAUTHORIZED.code()));
+
+                    response.bodyHandler(body -> {
+                        JsonObject jsonError = body.toJsonObject();
+
+                        assertThat(context, jsonError.getString("code"), is(errorResponse.getCode()));
+                        assertThat(context, jsonError.getString("message"), is(errorResponse.getMessage()));
                         async.complete();
                     });
                 })

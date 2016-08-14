@@ -6,7 +6,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 
 public abstract class OrderCaptureApiClient extends AbstractVerticle {
-    public abstract Future<CreateOrderCaptureResponse> create();
+    public abstract Future<RawJsonResponse> create();
     public abstract Future<RawJsonResponse> get(String orderCaptureId, String token);
     public abstract Future<RawJsonResponse> addItem(String orderCaptureId, String skuId, int quantity, String token);
 }

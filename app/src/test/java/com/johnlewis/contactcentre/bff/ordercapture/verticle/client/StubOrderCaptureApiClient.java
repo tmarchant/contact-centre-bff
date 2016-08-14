@@ -3,6 +3,7 @@ package com.johnlewis.contactcentre.bff.ordercapture.verticle.client;
 import com.johnlewis.contactcentre.bff.global.domain.RawJsonResponse;
 import com.johnlewis.contactcentre.bff.ordercapture.domain.CreateOrderCaptureResponse;
 import io.vertx.core.Future;
+import io.vertx.core.json.JsonObject;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import lombok.Setter;
 public class StubOrderCaptureApiClient extends OrderCaptureApiClient {
 
     @Setter
-    private CreateOrderCaptureResponse createOrderCaptureResponse;
+    private RawJsonResponse createOrderCaptureResponse;
     @Setter
     private RawJsonResponse addItemResponse;
     @Setter
@@ -27,8 +28,8 @@ public class StubOrderCaptureApiClient extends OrderCaptureApiClient {
     }
 
     @Override
-    public Future<CreateOrderCaptureResponse> create() {
-        Future<CreateOrderCaptureResponse> future = Future.future();
+    public Future<RawJsonResponse> create() {
+        Future<RawJsonResponse> future = Future.future();
         future.complete(createOrderCaptureResponse);
 
         return future;

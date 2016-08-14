@@ -41,7 +41,8 @@ public class OrderCaptureVerticle extends RoutableVerticle {
         orderCaptureApiClient.create().setHandler(f -> {
             routingContext.response()
                     .putHeader("content-type", "application/json")
-                    .end(Json.encodePrettily(f.result()));
+                    .setStatusCode(f.result().getStatusCode())
+                    .end(f.result().getData());
         });
     }
 
@@ -52,6 +53,7 @@ public class OrderCaptureVerticle extends RoutableVerticle {
         orderCaptureApiClient.get(orderCaptureId, token).setHandler(f -> {
             routingContext.response()
                     .putHeader("content-type", "application/json")
+                    .setStatusCode(f.result().getStatusCode())
                     .end(f.result().getData());
         });
     }

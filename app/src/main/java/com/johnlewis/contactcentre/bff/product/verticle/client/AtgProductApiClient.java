@@ -30,7 +30,7 @@ public class AtgProductApiClient extends ProductApiClient {
                 .putHeader("Content-Type", "application/json")
                 .putHeader("User-Agent", "Vert.x")
                 .handler(response -> response.bodyHandler(body -> {
-                    responseFuture.complete(new RawJsonResponse(body.toString()));
+                    responseFuture.complete(new RawJsonResponse(response.statusCode(), body.toString()));
                 }))
                 .end();
 
@@ -45,7 +45,7 @@ public class AtgProductApiClient extends ProductApiClient {
                 .putHeader("Content-Type", "application/json")
                 .putHeader("User-Agent", "Vert.x")
                 .handler(response -> response.bodyHandler(body -> {
-                    responseFuture.complete(new RawJsonResponse(body.toString()));
+                    responseFuture.complete(new RawJsonResponse(response.statusCode(), body.toString()));
                 }))
                 .end();
 

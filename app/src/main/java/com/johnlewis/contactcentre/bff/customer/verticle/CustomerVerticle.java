@@ -3,6 +3,8 @@ package com.johnlewis.contactcentre.bff.customer.verticle;
 import com.johnlewis.contactcentre.bff.RoutableVerticle;
 import com.johnlewis.contactcentre.bff.customer.domain.Customer;
 import com.johnlewis.contactcentre.bff.customer.domain.CustomerSearchResults;
+import com.johnlewis.contactcentre.bff.customer.verticle.client.CustomerApiClient;
+import com.johnlewis.contactcentre.bff.customer.verticle.client.MockCustomerApiClient;
 import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -12,8 +14,15 @@ import java.util.Arrays;
 
 public class CustomerVerticle extends RoutableVerticle {
 
+    private final CustomerApiClient customerApiClient;
+
     public CustomerVerticle(Router router) {
+        this(router, new MockCustomerApiClient());
+    }
+
+    public CustomerVerticle(Router router, CustomerApiClient customerApiClient) {
         super(router);
+        this.customerApiClient = customerApiClient;
     }
 
     @Override
@@ -26,17 +35,11 @@ public class CustomerVerticle extends RoutableVerticle {
 
         System.out.println("Searching customers with query: " + query);
 
-        CustomerSearchResults searchResults = getMockCustomerResults();
-
-        routingContext.response()
-                .putHeader("content-type", "application/json")
-                .end(Json.encodePrettily(searchResults));
-    }
-
-    @NotNull
-    private CustomerSearchResults getMockCustomerResults() {
-        return new CustomerSearchResults
-                    (Arrays.asList(new Customer("1", "Tom")));
+        customerApiClient.searchCustomers(query).setHandler(f -> {
+            routingContext.response()
+                    .putHeader("content-type", "application/json")
+                    .end(Json.encode(f.result()));
+        });
     }
 
     @Override

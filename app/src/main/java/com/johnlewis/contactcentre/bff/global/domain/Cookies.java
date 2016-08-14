@@ -2,7 +2,7 @@ package com.johnlewis.contactcentre.bff.global.domain;
 
 import java.util.List;
 
-public class CookieTools {
+public class Cookies {
     public static String extractCookieValue(List<String> cookies, String cookieName) {
         String fullCookie = cookies.stream()
                 .filter(c -> c.startsWith(cookieName+"="))

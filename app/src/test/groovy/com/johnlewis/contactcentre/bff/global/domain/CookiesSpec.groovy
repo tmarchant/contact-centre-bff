@@ -3,7 +3,7 @@ package com.johnlewis.contactcentre.bff.global.domain
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class CookieToolsTest extends Specification {
+class CookiesSpec extends Specification {
 
     @Unroll
     def "cookie value extracted from cookie: #cookieName"() {
@@ -12,7 +12,7 @@ class CookieToolsTest extends Specification {
                         'Almond=nom nom']
 
         expect:
-        CookieTools.extractCookieValue(cookies, cookieName) == expectedCookieValue
+        Cookies.extractCookieValue(cookies, cookieName) == expectedCookieValue
 
         where:
         cookieName  | expectedCookieValue
