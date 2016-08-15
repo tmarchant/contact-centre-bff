@@ -11,6 +11,7 @@ import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpClientResponse;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 
 public class AtgOrderCaptureApiClient extends OrderCaptureApiClient {
 
@@ -76,11 +77,32 @@ public class AtgOrderCaptureApiClient extends OrderCaptureApiClient {
         return responseFuture;
     }
 
-    String buildAddItemRequestUrl(String orderCaptureId, String token) {
+    @Override
+    public Future<RawJsonResponse> setCustomer(String orderCaptureId, String customerId, String token) {
+        Future<RawJsonResponse> responseFuture = Future.future();
+
+        JsonObject setCustomerJson = new JsonObject();
+        setCustomerJson.put("id", customerId);
+
+        httpClient.post(buildSetCustomerRequestUrl(orderCaptureId, token))
+                .putHeader("Content-Type", "application/json")
+                .putHeader("User-Agent", "Vert.x")
+                .handler(response -> response.bodyHandler(body ->
+                        responseFuture.complete(new RawJsonResponse(response.statusCode(), body.toString()))))
+                .end(setCustomerJson.encode());
+
+        return responseFuture;
+    }
+
+    private String buildSetCustomerRequestUrl(String orderCaptureId, String token) {
+        return BASKET_PATH+"/"+orderCaptureId+"/customer?token="+token;
+    }
+
+    private String buildAddItemRequestUrl(String orderCaptureId, String token) {
         return BASKET_PATH+"/"+orderCaptureId+"/items?token="+token;
     }
 
-    String buildGetOrderCaptureUrl(String orderCaptureId, String token) {
+    private String buildGetOrderCaptureUrl(String orderCaptureId, String token) {
         return BASKET_PATH+"/"+orderCaptureId+"?token="+token;
     }
 

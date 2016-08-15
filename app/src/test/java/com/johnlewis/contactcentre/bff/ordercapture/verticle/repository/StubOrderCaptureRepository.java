@@ -1,32 +1,31 @@
-package com.johnlewis.contactcentre.bff.ordercapture.verticle.client;
+package com.johnlewis.contactcentre.bff.ordercapture.verticle.repository;
 
+import com.johnlewis.contactcentre.bff.global.domain.JsonResponse;
 import com.johnlewis.contactcentre.bff.global.domain.RawJsonResponse;
-import com.johnlewis.contactcentre.bff.ordercapture.domain.CreateOrderCaptureResponse;
+import com.johnlewis.contactcentre.bff.ordercapture.verticle.client.StubOrderCaptureApiClient;
 import io.vertx.core.Future;
-import io.vertx.core.json.JsonObject;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-public class StubOrderCaptureApiClient extends OrderCaptureApiClient {
+public class StubOrderCaptureRepository extends OrderCaptureRepository {
 
     @Setter
     private RawJsonResponse createOrderCaptureResponse;
     @Setter
     private RawJsonResponse addItemResponse;
     @Setter
-    private RawJsonResponse orderCaptureResponse;
+    private JsonResponse orderCaptureResponse;
     @Getter
     private String lastRequestToken;
     @Getter
-    private AddItemRequest lastAddItemRequest;
+    private StubOrderCaptureApiClient.AddItemRequest lastAddItemRequest;
     @Getter
     private String lastRequestOrderCaptureId;
     @Setter
     private int setCustomerResponseCode = 200;
 
-    public StubOrderCaptureApiClient() {
-        System.out.println("StubOrderCaptureApiClient:: started");
+    public StubOrderCaptureRepository() {
+        System.out.println("StubOrderCaptureRepository:: started");
     }
 
     @Override
@@ -38,11 +37,11 @@ public class StubOrderCaptureApiClient extends OrderCaptureApiClient {
     }
 
     @Override
-    public Future<RawJsonResponse> get(String orderCaptureId, String token) {
+    public Future<JsonResponse> get(String orderCaptureId, String token) {
         this.lastRequestToken = token;
         this.lastRequestOrderCaptureId = orderCaptureId;
 
-        Future<RawJsonResponse> future = Future.future();
+        Future<JsonResponse> future = Future.future();
         future.complete(orderCaptureResponse);
 
         return future;
@@ -52,7 +51,7 @@ public class StubOrderCaptureApiClient extends OrderCaptureApiClient {
     public Future<RawJsonResponse> addItem(String orderCaptureId, String skuId, int quantity, String token) {
         this.lastRequestToken = token;
         this.lastRequestOrderCaptureId = orderCaptureId;
-        this.lastAddItemRequest = new AddItemRequest(skuId, quantity);
+        this.lastAddItemRequest = new StubOrderCaptureApiClient.AddItemRequest(skuId, quantity);
 
         Future<RawJsonResponse> future = Future.future();
         future.complete(addItemResponse);
@@ -69,11 +68,5 @@ public class StubOrderCaptureApiClient extends OrderCaptureApiClient {
         future.complete(new RawJsonResponse(setCustomerResponseCode, ""));
 
         return future;
-    }
-
-    @Data
-    public static class AddItemRequest {
-        private final String skuId;
-        private final int quantity;
     }
 }

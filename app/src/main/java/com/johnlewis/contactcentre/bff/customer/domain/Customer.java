@@ -30,4 +30,8 @@ public class Customer {
                 .name(customerJson.getString("name"))
                 .build();
     }
+
+    public boolean matches(String customerId) {
+        return this.id.equals(customerId);
+    }
 }

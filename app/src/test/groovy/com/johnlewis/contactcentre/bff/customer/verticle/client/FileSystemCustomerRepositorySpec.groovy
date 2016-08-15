@@ -1,12 +1,13 @@
 package com.johnlewis.contactcentre.bff.customer.verticle.client
 
+import com.johnlewis.contactcentre.bff.customer.verticle.repository.FileSystemCustomerRepository
 import spock.lang.Specification
 
-class MockCustomerApiClientSpec extends Specification {
+class FileSystemCustomerRepositorySpec extends Specification {
 
     def "decode JSON test file into Customer instances"() {
         given:
-        def client = new MockCustomerApiClient("data/test-customers.json")
+        def client = new FileSystemCustomerRepository("data/test-customers.json")
 
         expect:
         client.customers.size() == 2

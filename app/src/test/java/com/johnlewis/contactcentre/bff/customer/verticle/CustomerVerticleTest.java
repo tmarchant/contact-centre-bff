@@ -1,6 +1,7 @@
 package com.johnlewis.contactcentre.bff.customer.verticle;
 
 import com.johnlewis.contactcentre.bff.customer.domain.Customer;
+import com.johnlewis.contactcentre.bff.customer.domain.CustomerId;
 import com.johnlewis.contactcentre.bff.customer.domain.CustomerSearchResults;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
@@ -33,7 +34,7 @@ public class CustomerVerticleTest {
     private Vertx vertx;
     private CustomerVerticle verticle;
 
-    private StubCustomerApiClient customerApiClient;
+    private StubCustomerRepository customerRepository;
 
     @Before
     public void setUp(TestContext context) throws IOException {
@@ -42,9 +43,9 @@ public class CustomerVerticleTest {
         vertx = Vertx.vertx().exceptionHandler(context.exceptionHandler());
         Router router = Router.router(vertx);
 
-        customerApiClient = new StubCustomerApiClient();
+        customerRepository = new StubCustomerRepository();
 
-        verticle = new CustomerVerticle(router, customerApiClient);
+        verticle = new CustomerVerticle(router, customerRepository);
         vertx.deployVerticle(verticle, context.asyncAssertSuccess());
 
         Future<HttpServer> httpServerFuture = Future.future();
@@ -68,7 +69,7 @@ public class CustomerVerticleTest {
         Customer customer = Customer.builder().id("1").name("Oscar Grouch").build();
         CustomerSearchResults customerSearchResults = new CustomerSearchResults(Arrays.asList(customer));
 
-        customerApiClient.setCustomerSearchResults(customerSearchResults);
+        customerRepository.setCustomerSearchResults(customerSearchResults);
 
         vertx.createHttpClient().get(PORT, "localhost", "/v1/customers?q=blerb")
                 .handler(response -> {

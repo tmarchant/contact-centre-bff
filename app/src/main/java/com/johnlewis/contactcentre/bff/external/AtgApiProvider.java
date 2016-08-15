@@ -9,10 +9,9 @@ public class AtgApiProvider {
 
     public static HttpClientOptions getHttpClientOptions(JsonObject config) {
         String host = config.getString("atg.host");
-        Integer port = config.getInteger("atg.port");
+        Integer port = Integer.parseInt(config.getString("atg.port"));
 
         String proxyHost = config.getString("atg.proxy.host");
-        Integer proxyPort = config.getInteger("atg.proxy.port");
 
         HttpClientOptions options = new HttpClientOptions()
                 .setDefaultHost(host)
@@ -20,6 +19,8 @@ public class AtgApiProvider {
                 .setSsl(port == 443);
 
         if (!Strings.isNullOrEmpty(proxyHost)) {
+            Integer proxyPort = Integer.parseInt(config.getString("atg.proxy.port"));
+            
             options.setProxyOptions(new ProxyOptions()
                     .setHost(proxyHost)
                     .setPort(proxyPort));

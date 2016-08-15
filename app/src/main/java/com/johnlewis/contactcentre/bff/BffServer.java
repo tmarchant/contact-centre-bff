@@ -1,9 +1,16 @@
 package com.johnlewis.contactcentre.bff;
 
+import com.johnlewis.contactcentre.bff.customer.domain.Customer;
+import com.johnlewis.contactcentre.bff.customer.domain.CustomerId;
+import com.johnlewis.contactcentre.bff.customer.domain.CustomerSearchResults;
 import com.johnlewis.contactcentre.bff.customer.verticle.CustomerVerticle;
+import com.johnlewis.contactcentre.bff.customer.verticle.repository.CustomerRepository;
+import com.johnlewis.contactcentre.bff.customer.verticle.repository.FileSystemCustomerRepository;
 import com.johnlewis.contactcentre.bff.ordercapture.verticle.OrderCaptureVerticle;
+import com.johnlewis.contactcentre.bff.ordercapture.verticle.repository.DefaultOrderCaptureRepository;
 import com.johnlewis.contactcentre.bff.product.verticle.ProductVerticle;
 import io.vertx.core.DeploymentOptions;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -27,8 +34,14 @@ public class BffServer {
         config = loadJsonConfigFromPropertiesFiles();
         DeploymentOptions options = new DeploymentOptions().setConfig(config);
 
-        vertx.deployVerticle(new OrderCaptureVerticle(router), options);
-        vertx.deployVerticle(new CustomerVerticle(router), options);
+        FileSystemCustomerRepository customerRepository = new FileSystemCustomerRepository();
+        DefaultOrderCaptureRepository orderCaptureRepository = new DefaultOrderCaptureRepository(customerRepository);
+
+        vertx.deployVerticle(customerRepository, options);
+        vertx.deployVerticle(orderCaptureRepository, options);
+
+        vertx.deployVerticle(new OrderCaptureVerticle(router, orderCaptureRepository), options);
+        vertx.deployVerticle(new CustomerVerticle(router, customerRepository), options);
         vertx.deployVerticle(new ProductVerticle(router), options);
     }
 
