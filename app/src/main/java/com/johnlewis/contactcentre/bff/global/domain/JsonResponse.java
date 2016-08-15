@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class JsonResponse {
+    public static final JsonResponse EMPTY = new JsonResponse(new JsonObject());
+
     final int statusCode;
     final JsonObject data;
 

@@ -19,9 +19,8 @@ public class OrderCaptureVerticle extends RoutableVerticle {
     }
 
     @Override
-    public void start(Future<Void> startFuture) throws Exception {
+    public void start() throws Exception {
         System.out.println("OrderCaptureVerticle:: started");
-        startFuture.complete();
     }
 
     @Override

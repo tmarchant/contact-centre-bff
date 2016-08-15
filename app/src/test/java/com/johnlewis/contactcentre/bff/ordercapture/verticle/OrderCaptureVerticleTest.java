@@ -27,7 +27,6 @@ import static com.johnlewis.contactcentre.bff.VertxMatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @RunWith(VertxUnitRunner.class)
-@Ignore
 public class OrderCaptureVerticleTest {
 
     private final int PORT = 3001;
@@ -54,7 +53,7 @@ public class OrderCaptureVerticleTest {
         Future<HttpServer> httpServerFuture = Future.future();
         vertx.createHttpServer()
             .requestHandler(router::accept)
-            .listen(PORT, "localhost");
+            .listen(PORT, httpServerFuture.completer());
 
         httpServerFuture.setHandler(f -> async.complete());
     }
@@ -89,7 +88,7 @@ public class OrderCaptureVerticleTest {
 
     @Test
     public void getOrderCaptureSendsExpectedParameters(TestContext context) {
-        //final Async async = context.async();
+        final Async async = context.async();
 
         String orderCaptureId = "o321";
         String token = "89s89dafdsdsSEPS!3jS1";
@@ -102,7 +101,7 @@ public class OrderCaptureVerticleTest {
                     assertThat(context, orderCaptureRepository.getLastRequestOrderCaptureId(), is(orderCaptureId));
                     assertThat(context, orderCaptureRepository.getLastRequestToken(), is(token));
 
-                   // async.complete();
+                   async.complete();
                 })
                 .end();
     }
@@ -114,14 +113,18 @@ public class OrderCaptureVerticleTest {
         String orderCaptureId = "o323";
         String token = "89ssdsFAK!3jS1";
 
-        JsonResponse orderCaptureResponse = new JsonResponse(new JsonObject());
+        JsonObject orderCaptureJson = new JsonObject();
+        orderCaptureJson.put("id", orderCaptureId);
+
+        JsonResponse orderCaptureResponse = new JsonResponse(orderCaptureJson);
         orderCaptureRepository.setOrderCaptureResponse(orderCaptureResponse);
 
         vertx.createHttpClient()
                 .get(PORT, "localhost", "/v1/order-capture/"+orderCaptureId+"?token="+token)
                 .handler(response -> {
                     response.bodyHandler(body -> {
-                        assertThat(context, body.toString(), is(orderCaptureResponse.getData()));
+                        JsonObject jsonResponse = body.toJsonObject();
+                        assertThat(context, jsonResponse.getString("id"), is(orderCaptureId));
                         async.complete();
                     });
                 })
@@ -234,7 +237,7 @@ public class OrderCaptureVerticleTest {
                 .end(setCustomerRequest.encodePrettily());
     }
 
-    @Test(timeout=10000)
+    @Test
     public void setCustomerHandlesErrorResponse(TestContext context) {
         final Async async = context.async();
 
