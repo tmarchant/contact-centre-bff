@@ -1,0 +1,9 @@
+{
+    "port": 3000,
+
+    "atg.host": "fat6store.projectepic.net",
+    "atg.port": 80,
+
+    "atg.proxy.host": "192.168.104.42",
+    "atg.proxy.port": 3128
+}

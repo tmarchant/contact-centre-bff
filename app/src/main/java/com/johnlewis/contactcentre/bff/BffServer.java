@@ -1,24 +1,14 @@
 package com.johnlewis.contactcentre.bff;
 
-import com.johnlewis.contactcentre.bff.customer.domain.Customer;
-import com.johnlewis.contactcentre.bff.customer.domain.CustomerId;
-import com.johnlewis.contactcentre.bff.customer.domain.CustomerSearchResults;
 import com.johnlewis.contactcentre.bff.customer.verticle.CustomerVerticle;
-import com.johnlewis.contactcentre.bff.customer.verticle.repository.CustomerRepository;
 import com.johnlewis.contactcentre.bff.customer.verticle.repository.FileSystemCustomerRepository;
 import com.johnlewis.contactcentre.bff.ordercapture.verticle.OrderCaptureVerticle;
 import com.johnlewis.contactcentre.bff.ordercapture.verticle.repository.DefaultOrderCaptureRepository;
 import com.johnlewis.contactcentre.bff.product.verticle.ProductVerticle;
 import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
-import lombok.SneakyThrows;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 
 public class BffServer {
 
@@ -31,7 +21,7 @@ public class BffServer {
         vertx = Vertx.vertx();
         router = Router.router(vertx);
 
-        config = loadJsonConfigFromPropertiesFiles();
+        config = loadJsonConfig();
         DeploymentOptions options = new DeploymentOptions().setConfig(config);
 
         FileSystemCustomerRepository customerRepository = new FileSystemCustomerRepository();
@@ -45,38 +35,21 @@ public class BffServer {
         vertx.deployVerticle(new ProductVerticle(router), options);
     }
 
-    private JsonObject loadJsonConfigFromPropertiesFiles() {
-        config = new JsonObject();
-        Properties properties = new Properties();
+    private JsonObject loadJsonConfig() {
+        config = new JsonConfigFileLoader().loadAllPresent(
+                "config/defaults.json",
+                "config/local.json");
 
-        appendPropertiesIfFileExists(properties, "application.properties");
-        appendPropertiesIfFileExists(properties, "local.properties");
-
-        System.out.println("Using properties:");
-        System.out.println("==================");
-        properties.entrySet().stream().forEach(e -> {
-            System.out.println(e.getKey()+"="+e.getValue());
-        });
-        System.out.println("==================");
-
-        properties.entrySet().stream().forEach(e -> {
-            config.put((String)e.getKey(), e.getValue());
-        });
+        System.out.println("Using configuration:");
+        System.out.println("====================");
+        System.out.println(config.encodePrettily());
+        System.out.println("====================");
 
         return config;
     }
 
-    @SneakyThrows(IOException.class)
-    private void appendPropertiesIfFileExists(Properties properties, String fileName) {
-        InputStream stream = getClass().getClassLoader().getResourceAsStream(fileName);
-
-        if (stream != null) {
-            properties.load(stream);
-        }
-    }
-
     public void run() {
-        int port = Integer.parseInt(config.getString("port", "3000"));
+        int port = config.getInteger("port");
 
         vertx.createHttpServer()
                 .requestHandler(router::accept)

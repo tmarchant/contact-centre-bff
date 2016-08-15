@@ -26,7 +26,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 @RunWith(VertxUnitRunner.class)
 public class AtgOrderCaptureClientTest {
 
-    private final String MOCK_ATG_PORT = "5555";
+    private final int MOCK_ATG_PORT = 5555;
     private final String MOCK_ATG_HOST = "localhost";
 
     private Vertx vertx;
@@ -52,7 +52,7 @@ public class AtgOrderCaptureClientTest {
         Future<HttpServer> httpServerFuture = Future.future();
         vertx.createHttpServer()
                 .requestHandler(router::accept)
-                .listen(Integer.parseInt(MOCK_ATG_PORT), MOCK_ATG_HOST, httpServerFuture.completer());
+                .listen(MOCK_ATG_PORT, MOCK_ATG_HOST, httpServerFuture.completer());
 
         httpServerFuture.setHandler(f -> async.complete());
     }
