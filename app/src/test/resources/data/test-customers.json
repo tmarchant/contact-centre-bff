@@ -1,0 +1,45 @@
+{
+  "customers": [
+    {
+      "name" : "Mr Krombopulus Michael",
+      "phone" : "0192390 39435435",
+      "email" : "kmichaelkills@hiredgun.com",
+      "id" : "3",
+      "statusDescription" : "Deceased",
+      "myJlNumber" : "9787676",
+      "dob" : "15-06-1670",
+      "homePhone" : "",
+      "workPhone" : "020 323432234",
+      "mobilePhone" : "0777 7777 7777",
+      "optionalAddressee" : "",
+      "nameOrNumber" : "Life Pod 732-G",
+      "street" : "Blarg Cloud Station",
+      "town" : "Blarglorp",
+      "postcode" : "FG23 90G",
+      "country" : "Gromflomite",
+      "state" : ""
+    },
+    {
+      "name" : "Mr Robot",
+      "phone" : "0343 3423234",
+      "email" : "mrrobot@fsociety.org",
+      "id" : "4",
+      "statusDescription" : "Banned",
+      "myJlNumber" : "",
+      "dob" : "",
+      "homePhone" : "",
+      "workPhone" : "",
+      "mobilePhone" : "",
+      "optionalAddressee" : "",
+      "nameOrNumber" : "",
+      "street" : "",
+      "town" : "",
+      "postcode" : "",
+      "country" : "",
+      "state" : ""
+    }
+  ]
+}
+
+
+

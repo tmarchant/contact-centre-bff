@@ -1,0 +1,5 @@
+{
+  "config.string.var" : "string value",
+  "config.number.var" : 123,
+  "config.boolean.var" : true
+}

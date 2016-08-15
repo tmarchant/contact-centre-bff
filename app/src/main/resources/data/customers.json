@@ -1,0 +1,83 @@
+{
+  "customers": [
+    {
+      "name" : "Mr Full Customer",
+      "phone" : "077777777",
+      "email" : "email@email.com",
+      "id" : "1",
+      "statusDescription" : "Active",
+      "myJlNumber" : "12345678",
+      "dob" : "27-01-1997",
+      "homePhone" : "020 2222 2222",
+      "workPhone" : "020 3333 3333",
+      "mobilePhone" : "0777 7777 7777",
+      "optionalAddressee" : "Flat 1",
+      "nameOrNumber" : "171",
+      "street" : "Victoria Street",
+      "town" : "London",
+      "postcode" : "SW1E 5NN",
+      "country" : "United Kingdom",
+      "state" : ""
+    },
+    {
+      "name" : "Mr Deceased Customer",
+      "phone" : "077777777",
+      "email" : "email@email.com",
+      "id" : "2",
+      "statusDescription" : "Deceased",
+      "myJlNumber" : "12345678",
+      "dob" : "27-01-1997",
+      "homePhone" : "020 2222 2222",
+      "workPhone" : "020 3333 3333",
+      "mobilePhone" : "0777 7777 7777",
+      "optionalAddressee" : "Flat 1",
+      "nameOrNumber" : "171",
+      "street" : "Victoria Street",
+      "town" : "London",
+      "postcode" : "SW1E 5NN",
+      "country" : "United Kingdom",
+      "state" : ""
+    },
+    {
+      "name" : "Mr Krombopulus Michael",
+      "phone" : "0192390 39435435",
+      "email" : "kmichaelkills@hiredgun.com",
+      "id" : "3",
+      "statusDescription" : "Deceased",
+      "myJlNumber" : "9787676",
+      "dob" : "15-06-1670",
+      "homePhone" : "",
+      "workPhone" : "020 323432234",
+      "mobilePhone" : "0777 7777 7777",
+      "optionalAddressee" : "",
+      "nameOrNumber" : "Life Pod 732-G",
+      "street" : "Blarg Cloud Station",
+      "town" : "Blarglorp",
+      "postcode" : "FG23 90G",
+      "country" : "Gromflomite",
+      "state" : ""
+    },
+    {
+      "name" : "Mr Robot",
+      "phone" : "0343 3423234",
+      "email" : "mrrobot@fsociety.org",
+      "id" : "4",
+      "statusDescription" : "Banned",
+      "myJlNumber" : "",
+      "dob" : "",
+      "homePhone" : "",
+      "workPhone" : "",
+      "mobilePhone" : "",
+      "optionalAddressee" : "",
+      "nameOrNumber" : "",
+      "street" : "",
+      "town" : "",
+      "postcode" : "",
+      "country" : "",
+      "state" : ""
+    }
+  ]
+}
+
+
+

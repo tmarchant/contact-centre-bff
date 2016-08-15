@@ -1,0 +1,6 @@
+{
+  "config.string.var" : "overridden value",
+  "config.number.var" : 123,
+  "config.boolean.var" : false,
+  "new.var" : "new value"
+}

@@ -16,7 +16,6 @@
 bin
 build
 code
-data
 lib/
 _site/
 target
@@ -35,8 +34,5 @@ overridedb.*
 *.ipr
 *.iws
 build.properties
-#ui
-node_modules
 package/rpm
 *.retry
-.barlow-installed
